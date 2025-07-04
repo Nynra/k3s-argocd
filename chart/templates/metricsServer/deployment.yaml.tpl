@@ -1,4 +1,4 @@
-{{- if .Values.metricsServer.enabled }}
+{{- if .Values.metricsExtension.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
