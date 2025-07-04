@@ -1,4 +1,3 @@
-{{- if .Values.metricsExtension.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -306,4 +305,3 @@ data:
       }
     }
     }
-{{- end }}

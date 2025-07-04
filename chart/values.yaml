@@ -20,8 +20,15 @@ bootstrapRepos:
   # This repo
   - url: https://github.com/Nynra/k3s-argocd
 
+dashboard:
+  enabled: false
+  ingressUrl: argocd.example.com
+  externalCert: 
+    name: argocd-dashboard-tls
+    remoteSecretName: argocd-dashboard-tls
+    remoteSecretStore: kubernetes
+
 metricsExtension:
-  enabled: true
   prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
 
 # Values for the ArgoCD Helm chart.

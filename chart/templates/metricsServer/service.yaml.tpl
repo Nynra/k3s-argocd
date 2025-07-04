@@ -1,4 +1,3 @@
-{{- if .Values.metricsExtension.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -15,4 +14,3 @@ spec:
       targetPort: 9003
   selector:
     app: argocd-metrics-server
-{{- end }}
