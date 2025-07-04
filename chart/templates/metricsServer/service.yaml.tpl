@@ -4,7 +4,7 @@ metadata:
   labels:
     app: argocd-metrics-server
   name: argocd-metrics-server
-  namespace: {{ .Values.namespace | quote }}
+  # namespace: {{ .Values.namespace | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:

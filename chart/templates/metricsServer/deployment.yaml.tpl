@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: argocd-metrics-server
-  namespace: {{ .Values.namespace | quote }}
+  # namespace: {{ .Values.namespace | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:

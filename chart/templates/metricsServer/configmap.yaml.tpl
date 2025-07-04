@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-metrics-server-configmap
-  namespace: {{ .Values.namespace | quote }}
+  # namespace: {{ .Values.namespace | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 data:
