@@ -1,0 +1,284 @@
+# Server and namespace to deploy Argo CD to.
+namespace: argocd
+server: https://kubernetes.default.svc
+
+# Project argocd is installed in.
+argocdProjectName: default
+argocdRepos:
+  # Argocd Helm chart repository
+  - url: https://argoproj.github.io/argo-helm
+  # This repo
+  - url: https://github.com/Nynra/k3s-argocd
+
+# Repositories that will be added to the bootstrapping project.
+bootstrapProjectName: infrastructure
+bootstrapRepos:
+  - url: https://github.com/Nynra/k3s-traefik
+  - url: https://github.com/Nynra/k3s-certs
+  - url: https://github.com/Nynra/k3s-storage
+  - url: https://github.com/Nynra/k3s-kube-prometheus-stack
+  # This repo
+  - url: https://github.com/Nynra/k3s-argocd
+
+metricsExtension:
+  enabled: true
+  prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
+
+# Values for the ArgoCD Helm chart.
+argo-cd: 
+  configs: 
+    params: 
+      server.enable.proxy.extension: "true"
+    rbac: 
+      policy.csv: |
+        p, role:org-admin, applications, *, */*, allow
+        p, role:org-admin, clusters, get, *, allow
+        p, role:org-admin, repositories, *, *, allow
+        p, role:org-admin, logs, get, *, allow
+        p, role:org-admin, exec, create, */*, allow
+        p, role:readonly, extensions, invoke, metrics, allow
+    cm: 
+      extension.config: |
+        extensions:
+          - name: metrics
+            backend:
+              services:
+                - url: http://argocd-metrics-server.argocd.svc:9003
+
+      # Argocd Health Checks
+      resource.customizations.health.argoproj.io_Application: |
+        hs = {}
+        hs.status = "Progressing"
+        hs.message = ""
+        if obj.status ~= nil then
+          if obj.status.health ~= nil then
+            hs.status = obj.status.health.status
+            if obj.status.health.message ~= nil then
+              hs.message = obj.status.health.message
+            end
+          end
+        end
+        return hs
+
+      # Cert Manager Health Checks
+      resource.customizations.health.cert-manager.io_Certificate: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+
+            -- Always Handle Issuing First to ensure consistent behaviour
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Issuing" and condition.status == "True" then
+                hs.status = "Progressing"
+                hs.message = condition.message
+                return hs
+              end
+            end
+
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+
+        hs.status = "Progressing"
+        hs.message = "Waiting for certificate"
+        return hs
+
+      resource.customizations.health.cert-manager.io_Issuer: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+
+        hs.status = "Progressing"
+        hs.message = "Initializing issuer"
+        return hs
+
+      resource.customizations.health.cert-manager.io_ClusterIssuer: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+
+        hs.status = "Progressing"
+        hs.message = "Initializing ClusterIssuer"
+        return hs
+      
+      # External Secrets Operator Health Checks
+      resource.customizations.health.external-secrets.io_ExternalSecret: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for ExternalSecret"
+        return hs
+      
+      resource.customizations.health.external-secrets.io_PushSecret: |
+        hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for PushSecret"
+        return hs
+
+      resource.customizations.health.external-secrets.io_SecretStore: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for SecretStore"
+        return hs
+
+      resource.customizations.health.external-secrets.io_ClusterExternalSecret: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            -- For ClusterExternalSecret, new statuses are appended to the end of the list
+            local lastStatus = obj.status.conditions[#obj.status.conditions]
+            if lastStatus.type == "Ready" and lastStatus.status == "True" then
+              hs.status = "Healthy"
+              hs.message = lastStatus.message
+              return hs
+            end
+            if lastStatus.type == "PartiallyReady" and lastStatus.status == "True" then
+              hs.status = "Degraded"
+              hs.message = lastStatus.message
+              return hs
+            end
+            if lastStatus.type == "NotReady" and lastStatus.status == "True" then
+              hs.status = "Degraded"
+              hs.message = lastStatus.message
+              return hs
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for ClusterExternalSecret"
+        return hs
+
+      resource.customizations.health.external-secrets.io_ClusterSecretStore: |
+        local hs = {}
+        if obj.status ~= nil then
+          if obj.status.conditions ~= nil then
+            for i, condition in ipairs(obj.status.conditions) do
+              if condition.type == "Ready" and condition.status == "False" then
+                hs.status = "Degraded"
+                hs.message = condition.message
+                return hs
+              end
+              if condition.type == "Ready" and condition.status == "True" then
+                hs.status = "Healthy"
+                hs.message = condition.message
+                return hs
+              end
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for ClusterSecretStore"
+        return hs
+
+  server:
+    # This is the correct location for the initContainer
+    InitContainers:
+      - name: install-metrics-extension
+        image: quay.io/argoprojlabs/argocd-extension-installer:v0.0.8
+        env:
+          - name: EXTENSION_URL
+            value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.3/extension.tar.gz
+          - name: EXTENSION_CHECKSUM_URL
+            value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.3/extension_checksums.txt
+        volumeMounts:
+          - name: extensions-dir
+            mountPath: /tmp/extensions/
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+
+    # This is the correct location for the volumeMount on the main container
+    VolumeMounts:
+      - name: extensions-dir
+        mountPath: /tmp/extensions/
+
+    # This is the correct location for the volume definition
+    Volumes:
+      - name: extensions-dir
+        emptyDir: {}
