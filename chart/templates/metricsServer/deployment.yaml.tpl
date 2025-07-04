@@ -1,3 +1,4 @@
+{{- if .Values.metricsServer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,3 +48,4 @@ spec:
         - name: config-volume
           configMap:
             name: argocd-metrics-server-configmap
+{{- end }}

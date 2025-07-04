@@ -29,6 +29,7 @@ dashboard:
     remoteSecretStore: kubernetes
 
 metricsExtension:
+  enabled: false
   prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
 
 # Values for the ArgoCD Helm chart.
