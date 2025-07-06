@@ -37,6 +37,8 @@ argo-cd:
   configs: 
     params: 
       server.enable.proxy.extension: "true"
+      # TLS termination is handled by Traefik, so we disable the TLS server in ArgoCD.
+      server.insecure: false
     rbac: 
       policy.csv: |
         p, role:org-admin, applications, *, */*, allow
