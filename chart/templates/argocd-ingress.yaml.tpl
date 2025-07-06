@@ -12,10 +12,6 @@ spec:
   routes:
     - match: Host(`{{ .Values.dashboard.ingressUrl }}`)
       kind: Rule
-      # middlewares:
-      #   - name: lan-only-ref
-      #     # namespace: {{ .Values.traefik.namespace }}
-      #     # kind: TraefikService
       services:
         - name: argocd-server
           port: 80
