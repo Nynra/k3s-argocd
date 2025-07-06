@@ -14,7 +14,7 @@ spec:
       kind: Rule
       services:
         - name: argocd-server
-          port: 80
+          port: 443
   tls:
     secretName: {{ .Values.dashboard.externalCert.name }}
 {{- end }}
