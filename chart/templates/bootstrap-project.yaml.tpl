@@ -20,4 +20,4 @@ spec:
     - group: "*"
       kind: "*"
   orphanedResources:
-    warn: true
+    warn: false
