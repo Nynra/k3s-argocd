@@ -1,35 +1,59 @@
+global:
+  commonAnnotations: {}
+  commonLabels: {}
+
+enabled: true
+
 # Server and namespace to deploy Argo CD to.
-namespace: argocd
-server: https://kubernetes.default.svc
+namespace:
+  enabled: true
+  commonAnnotations: {}
+  commonLabels: {}
+  name: argocd
 
 # Project argocd is installed in.
-argocdProjectName: default
-argocdRepos:
-  # Argocd Helm chart repository
-  - url: https://argoproj.github.io/argo-helm
-  # This repo
-  - url: https://github.com/Nynra/k3s-argocd
+argocdProject: 
+  enabled: true
+  name: default
+  commonAnnotations: {}
+  commonLabels: {}
+  repos:
+    # Argocd Helm chart repository
+    - https://argoproj.github.io/argo-helm
+    # This repo
+    - https://github.com/Nynra/k3s-argocd
 
 # Repositories that will be added to the bootstrapping project.
-bootstrapProjectName: infrastructure
-bootstrapRepos:
-  - url: https://github.com/Nynra/k3s-traefik
-  - url: https://github.com/Nynra/k3s-certs
-  - url: https://github.com/Nynra/k3s-storage
-  - url: https://github.com/Nynra/k3s-kube-prometheus-stack
-  # This repo
-  - url: https://github.com/Nynra/k3s-argocd
+bootstrapProject: 
+  enabled: true
+  name: infrastructure
+  commonAnnotations: {}
+  commonLabels: {}
+  repos:
+    - https://github.com/Nynra/k3s-traefik
+    - https://github.com/Nynra/k3s-certs
+    - https://github.com/Nynra/k3s-storage
+    - https://github.com/Nynra/k3s-kube-prometheus-stack
+    # This repo
+    - https://github.com/Nynra/k3s-argocd
 
 dashboard:
   enabled: false
   ingressUrl: argocd.example.com
+  entrypoint: websecure
+  commonAnnotations: {}
+  commonLabels: {}
+  certName: argocd-dashboard-tls
   externalCert: 
-    name: argocd-dashboard-tls
-    remoteSecretName: argocd-dashboard-tls
-    remoteSecretStore: kubernetes
+    enabled: true
+    secretName: argocd-dashboard-tls
+    secretStore: kubernetes
+    secretStoreType: "ClusterSecretStore"
 
 metricsExtension:
   enabled: false
+  commonAnnotations: {}
+  commonLabels: {}
   prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
 
 # Values for the ArgoCD Helm chart.
