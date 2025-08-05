@@ -9,11 +9,11 @@ metadata:
     {{- if .Values.global.commonAnnotations }}
       {{- toYaml .Values.global.commonAnnotations | nindent 4 }}
     {{- end }}
+  {{- if .Values.global.commonLabels }}
   labels:
     # Global labels
-    {{- if .Values.global.commonLabels }}
-      {{- toYaml .Values.global.commonLabels | nindent 4 }}
-    {{- end }}
+    {{- toYaml .Values.global.commonLabels | nindent 4 }}
+  {{- end }}
 spec:
   sourceRepos:
     {{- range .Values.argocdProject.repos }}
