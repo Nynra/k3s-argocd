@@ -4,19 +4,10 @@ global:
 
 enabled: true
 
-# Server and namespace to deploy Argo CD to.
-namespace:
-  enabled: true
-  commonAnnotations: {}
-  commonLabels: {}
-  name: argocd
-
 # Project argocd is installed in.
 argocdProject: 
   enabled: true
   name: default
-  commonAnnotations: {}
-  commonLabels: {}
   repos:
     # Argocd Helm chart repository
     - https://argoproj.github.io/argo-helm
@@ -27,8 +18,6 @@ argocdProject:
 bootstrapProject: 
   enabled: true
   name: infrastructure
-  commonAnnotations: {}
-  commonLabels: {}
   repos:
     - https://github.com/Nynra/k3s-traefik
     - https://github.com/Nynra/k3s-certs
@@ -41,9 +30,6 @@ dashboard:
   enabled: false
   ingressUrl: argocd.example.com
   entrypoint: websecure
-  commonAnnotations: {}
-  commonLabels: {}
-  certName: argocd-dashboard-tls
   externalCert: 
     enabled: true
     secretName: argocd-dashboard-tls
@@ -52,8 +38,6 @@ dashboard:
 
 metricsExtension:
   enabled: false
-  commonAnnotations: {}
-  commonLabels: {}
   prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
 
 # Values for the ArgoCD Helm chart.

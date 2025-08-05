@@ -9,18 +9,10 @@ metadata:
     {{- if .Values.global.commonAnnotations }}
       {{- toYaml .Values.global.commonAnnotations | nindent 4 }}
     {{- end }}
-    # Custom annotations
-    {{- if .Values.bootstrapProject.commonAnnotations }}
-    {{- toYaml .Values.bootstrapProject.commonAnnotations | nindent 4 }}
-    {{- end }}
   labels:
     # Global labels
     {{- if .Values.global.commonLabels }}
       {{- toYaml .Values.global.commonLabels | nindent 4 }}
-    {{- end }}
-    # Custom labels
-    {{- if .Values.bootstrapProject.commonLabels }}
-    {{- toYaml .Values.bootstrapProject.commonLabels | nindent 4 }}
     {{- end }}
 spec:
   sourceRepos:

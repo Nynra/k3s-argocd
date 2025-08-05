@@ -9,18 +9,10 @@ metadata:
     {{- if .Values.global.commonAnnotations }}
       {{- toYaml .Values.global.commonAnnotations | nindent 4 }}
     {{- end }}
-    # Custom annotations
-    {{- if .Values.argocdProject.commonAnnotations }}
-    {{- toYaml .Values.argocdProject.commonAnnotations | nindent 4 }}
-    {{- end }}
   labels:
     # Global labels
     {{- if .Values.global.commonLabels }}
       {{- toYaml .Values.global.commonLabels | nindent 4 }}
-    {{- end }}
-    # Custom labels
-    {{- if .Values.argocdProject.commonLabels }}
-    {{- toYaml .Values.argocdProject.commonLabels | nindent 4 }}
     {{- end }}
 spec:
   sourceRepos:
@@ -30,7 +22,7 @@ spec:
     - "*"
     {{- end }}
   destinations:
-    - namespace: {{ .Values.namespace.name | quote }}
+    - namespace: {{ .Release.Namespace | quote }}
       server: "*"
   clusterResourceWhitelist:
     - group: "*"
