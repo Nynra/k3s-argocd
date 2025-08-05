@@ -15,6 +15,7 @@ metadata:
     {{- if .Values.global.commonLabels }}
       {{- toYaml .Values.global.commonLabels | nindent 4 }}
     {{- end }}
+spec:
   entryPoints:
     - {{ .Values.dashboard.entrypoint }}
   routes:
