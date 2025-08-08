@@ -21,6 +21,15 @@ spec:
   routes:
     - match: Host(`{{ .Values.dashboard.ingressUrl }}`)
       kind: Rule
+      {{- if .Values.dashboard.middlewares }}
+      middlewares:
+        {{- range .Values.dashboard.middlewares }}
+        - name: {{ .name | quote }}
+          {{- if .namespace }}
+          namespace: {{ .namespace | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       services:
         - name: argocd-server
           port: 443

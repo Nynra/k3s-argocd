@@ -50,6 +50,9 @@ dashboard:
   enabled: false
   ingressUrl: argocd.example.com
   entrypoint: websecure
+  middlewares:
+    - name: traefik-default-chain
+      namespace: traefik
   externalCert: 
     enabled: true
     secretName: argocd-dashboard-tls
