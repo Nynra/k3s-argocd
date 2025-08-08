@@ -1,8 +1,8 @@
-{{- if .Values.enabled }}{{- if .Values.argocdProject.enabled }}
+{{- if .Values.enabled }}{{- if .Values.bootstrapProject.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: {{ .Values.argocdProject.name | quote }}
+  name: {{ .Values.bootstrapProject.name | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     # Global annotations
@@ -16,17 +16,19 @@ metadata:
   {{- end }}
 spec:
   sourceRepos:
-    {{- range .Values.argocdProject.repos }}
+    {{- range .Values.bootstrapProject.repos }}
     - {{ . | quote }}
     {{- else }}
     - "*"
     {{- end }}
   destinations:
-    - namespace: {{ .Release.Namespace | quote }}
-      server: "*"
+    - namespace: "*"
+      server: {{ .Values.destination.server | quote }}
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
+  {{- if .Values.bootstrapProject.warnOrphanedResources }}
   orphanedResources:
     warn: true
+  {{- end }}
 {{- end }}{{- end }}

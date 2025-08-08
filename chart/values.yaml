@@ -4,10 +4,17 @@ global:
 
 enabled: true
 
+destination:
+  # Destinations to deploy this chart to
+  server: https://kubernetes.default.svc
+
 # Project argocd is installed in.
 argocdProject: 
   enabled: true
   name: default
+  # commonLabels: {}
+  # commonAnnotations: {}
+  warnOrphanedResources: true
   repos:
     # Argocd Helm chart repository
     - https://argoproj.github.io/argo-helm
@@ -18,11 +25,24 @@ argocdProject:
 bootstrapProject: 
   enabled: true
   name: infrastructure
+  # commonLabels: {}
+  # commonAnnotations: {}
+  warnOrphanedResources: false
   repos:
     - https://github.com/Nynra/k3s-traefik
     - https://github.com/Nynra/k3s-certs
     - https://github.com/Nynra/k3s-storage
     - https://github.com/Nynra/k3s-kube-prometheus-stack
+    # This repo
+    - https://github.com/Nynra/k3s-argocd
+
+tenantManagementProject: 
+  enabled: false
+  name: tenant-management
+  # commonLabels: {}
+  # commonAnnotations: {}
+  warnOrphanedResources: false
+  repos:
     # This repo
     - https://github.com/Nynra/k3s-argocd
 
@@ -36,9 +56,9 @@ dashboard:
     secretStore: kubernetes
     secretStoreType: "ClusterSecretStore"
 
-metricsExtension:
-  enabled: false
-  prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
+# metricsExtension:
+#   enabled: false
+#   prometheusAddress: "http://prom-stack-kube-prometheus-prometheus.monitoring.svc:9090"
 
 # Values for the ArgoCD Helm chart.
 argo-cd: 

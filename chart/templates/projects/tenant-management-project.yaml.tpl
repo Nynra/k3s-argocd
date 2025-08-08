@@ -1,8 +1,8 @@
-{{- if .Values.enabled }}{{- if .Values.bootstrapProject.enabled }}
+{{- if .Values.enabled }}{{- if .Values.tenantManagementProject.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: {{ .Values.bootstrapProject.name | quote }}
+  name: {{ .Values.tenantManagementProject.name | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     # Global annotations
@@ -16,15 +16,19 @@ metadata:
   {{- end }}
 spec:
   sourceRepos:
-    {{- range .Values.bootstrapProject.repos }}
+    {{- range .Values.tenantManagementProject.repos }}
     - {{ . | quote }}
     {{- else }}
     - "*"
     {{- end }}
   destinations:
     - namespace: "*"
-      server: "*"
+      server: {{ .Values.destination.server | quote }}
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
+  {{- if .Values.tenantManagementProject.warnOrphanedResources }}
+  orphanedResources:
+    warn: true
+  {{- end }}
 {{- end }}{{- end }}
