@@ -2,6 +2,13 @@ global:
   commonAnnotations: {}
   commonLabels: {}
 
+  # Default network policy rules used by all components
+  networkPolicy:
+    # -- Create NetworkPolicy objects for all components
+    create: true
+    # -- Default deny all ingress traffic
+    defaultDenyIngress: false
+
 enabled: true
 
 destination:
@@ -70,6 +77,13 @@ argo-cd:
       server.enable.proxy.extension: "true"
       # TLS termination is handled by Traefik, so we disable the TLS server in ArgoCD.
       server.insecure: false
+
+      # -- Enables [Applications in any namespace]
+      ## List of additional namespaces where applications may be created in and reconciled from.
+      ## The namespace where Argo CD is installed to will always be allowed.
+      ## Set comma-separated list. (e.g. app-team-one, app-team-two)
+      application.namespaces: ""
+
     rbac: 
       policy.csv: |
         p, role:org-admin, applications, *, */*, allow
