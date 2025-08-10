@@ -18,6 +18,9 @@ spec:
   sourceRepos: []
   destinations: []
   clusterResourceWhitelist: []
+  namespaceResourceBlacklist:
+    - group: '*'
+      kind: '*'
   orphanedResources:
     warn: true
 {{- end }}{{- end }}
