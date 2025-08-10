@@ -1,6 +1,8 @@
 global:
   commonAnnotations: {}
-  commonLabels: {}
+  commonLabels: 
+    tenancy.io/stack: k3s-argocd 
+    tenancy.io/tenant: test
 
   # Default network policy rules used by all components
   networkPolicy:
