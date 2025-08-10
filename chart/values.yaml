@@ -15,10 +15,17 @@ destination:
   # Destinations to deploy this chart to
   server: https://kubernetes.default.svc
 
+# Default argocd project that always exists.
+defaultProject:
+  # Enabling the default project will apply the manifest and lock down
+  # the default project so nothing can be added to it. Make sure to 
+  # disable this during bootstrapping.
+  enabled: false
+
 # Project argocd is installed in.
 argocdProject: 
   enabled: true
-  name: default
+  name: argocd
   # commonLabels: {}
   # commonAnnotations: {}
   warnOrphanedResources: true
