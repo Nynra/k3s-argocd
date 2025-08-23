@@ -78,7 +78,7 @@ dashboard:
     reflectedSecret: 
       enabled: true
       originNamespace: certs
-      originName: argocd-dashboard-tls
+      originSecretName: argocd-dashboard-tls
 
 # metricsExtension:
 #   enabled: false
