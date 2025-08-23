@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}{{- if .Values.dashboard.enabled }}
+{{- if .Values.enabled }}{{- if .Values.dashboard.cert.externalSecret.enabled }}
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -18,20 +18,20 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: {{ .Values.dashboard.externalCert.secretStore }}
+    name: {{ .Values.dashboard.cert.externalCert.secretStore }}
   target:
     creationPolicy: Owner
   data:
     - secretKey: tls.crt
       remoteRef:
-        key: {{ .Values.dashboard.externalCert.secretName | quote }}
+        key: {{ .Values.dashboard.cert.externalCert.secretName | quote }}
         property: tls_crt
         conversionStrategy: Default	
         decodingStrategy: None
         metadataPolicy: None
     - secretKey: tls.key
       remoteRef:
-        key: {{ .Values.dashboard.externalCert.secretName | quote }}
+        key: {{ .Values.dashboard.cert.externalCert.secretName | quote }}
         property: tls_key
         conversionStrategy: Default	
         decodingStrategy: None

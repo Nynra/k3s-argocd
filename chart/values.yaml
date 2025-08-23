@@ -69,11 +69,16 @@ dashboard:
   middlewares:
     - name: traefik-default-chain
       namespace: traefik
-  externalCert: 
-    enabled: true
-    secretName: argocd-dashboard-tls
-    secretStore: kubernetes
-    secretStoreType: "ClusterSecretStore"
+  cert:
+    externalSecret: 
+      enabled: false
+      secretName: argocd-dashboard-tls
+      secretStore: kubernetes
+      secretStoreType: "ClusterSecretStore"
+    reflectedSecret: 
+      enabled: true
+      originNamespace: certs
+      originName: argocd-dashboard-tls
 
 # metricsExtension:
 #   enabled: false
