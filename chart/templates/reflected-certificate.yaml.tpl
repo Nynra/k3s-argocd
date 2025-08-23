@@ -1,5 +1,4 @@
-{{ - if .Values.enabled }}
-{{ if .Values.dashboard.cert.reflectedSecret.enabled }}
+{{ if .Values.enabled }}{{ if .Values.dashboard.cert.reflectedSecret.enabled }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -18,5 +17,4 @@ metadata:
     {{- toYaml .Values.global.commonLabels | nindent 4 }}
   {{- end }}
 ---
-{{ end }}
-{{ end }}
+{{ end }}{{ end }}
