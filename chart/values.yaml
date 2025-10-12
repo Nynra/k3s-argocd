@@ -13,6 +13,11 @@ global:
 
 enabled: true
 
+namespace:
+  # If enabled the release namespace will be managed by manifest in this chart.
+  # it is recommended to manage namespaces from the argocd applications instead.
+  enabled: false
+
 destination:
   # Destinations to deploy this chart to
   server: https://kubernetes.default.svc
