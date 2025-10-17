@@ -39,7 +39,7 @@ spec:
     warn: true
   {{- end }}
   # The project can only deploy resources to clusters scoped to this project
-  permitOnlyProjectScopedClusters: true
+  permitOnlyProjectScopedClusters: false
   # This project only allows applications in the argocd namespace
   sourceNamespaces:
     - {{ .Release.Namespace | quote }}

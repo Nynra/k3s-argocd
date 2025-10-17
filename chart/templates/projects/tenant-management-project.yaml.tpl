@@ -38,5 +38,5 @@ spec:
   orphanedResources:
     warn: true
   {{- end }}
-  permitOnlyProjectScopedClusters: true
+  permitOnlyProjectScopedClusters: false
 {{- end }}{{- end }}
