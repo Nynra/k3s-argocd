@@ -113,7 +113,7 @@ dashboard:
 
 # Values for the ArgoCD Helm chart.
 argo-cd: 
-  enabled: false
+  enabled: true
   configs: 
     params: 
       server.enable.proxy.extension: "true"
