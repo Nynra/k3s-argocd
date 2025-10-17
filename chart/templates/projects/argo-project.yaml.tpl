@@ -24,8 +24,6 @@ spec:
   destinations:
     - namespace: {{ .Release.Namespace | quote }}
       server: {{ .Values.destination.server | quote }}
-  destinationNamespaces:
-    - {{ .Release.Namespace | quote }}
   clusterResourceWhitelist:
     {{- range .Values.argocdProject.clusterResourceWhitelist }}
     - group: {{ .group | quote }}
@@ -37,7 +35,13 @@ spec:
       kind: {{ .kind | quote }}
     {{- end }}
   {{- if .Values.bootstrapProject.warnOrphanedResources }}
+  # Warn about  orphaned resources
   orphanedResources:
     warn: true
   {{- end }}
+  # The project can only deploy resources to clusters scoped to this project
+  permitOnlyProjectScopedClusters: true
+  # This project only allows applications in the argocd namespace
+  sourceNamespaces:
+    - {{ .Release.Namespace | quote }}
 {{- end }}{{- end }}

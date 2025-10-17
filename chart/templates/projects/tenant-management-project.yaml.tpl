@@ -20,11 +20,9 @@ spec:
     - {{ . | quote }}
     {{- end }}
   destinations:
-    - namespace: {{ .Release.Namespace | quote }}
-      server: {{ .Values.destination.server | quote }}
-  destinationNamespaces:
     {{- range .Values.tenantManagementProject.namespaces }}
-    - {{ . | quote }}
+    - namespace: {{ . | quote }}
+      server: {{ .Values.destination.server | quote }}
     {{- end }}
   clusterResourceWhitelist:
     {{- range .Values.tenantManagementProject.clusterResourceWhitelist }}
@@ -40,4 +38,5 @@ spec:
   orphanedResources:
     warn: true
   {{- end }}
+  permitOnlyProjectScopedClusters: true
 {{- end }}{{- end }}

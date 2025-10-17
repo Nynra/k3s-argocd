@@ -21,4 +21,6 @@ spec:
   namespaceResourceWhitelist: []
   orphanedResources:
     warn: true
+  permitOnlyProjectScopedClusters: true
+  sourceNamespaces: []
 {{- end }}{{- end }}
