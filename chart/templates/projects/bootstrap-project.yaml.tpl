@@ -18,15 +18,24 @@ spec:
   sourceRepos:
     {{- range .Values.bootstrapProject.repos }}
     - {{ . | quote }}
-    {{- else }}
-    - "*"
     {{- end }}
   destinations:
-    - namespace: "*"
+    - namespace: {{ .Release.Namespace | quote }}
       server: {{ .Values.destination.server | quote }}
+  destinationNamespaces:
+    {{- range .Values.bootstrapProject.namespaces }}
+    - {{ . | quote }}
+    {{- end }}
   clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
+    {{- range .Values.bootstrapProject.clusterResourceWhitelist }}
+    - group: {{ .group | quote }}
+      kind: {{ .kind | quote }}
+    {{- end }}
+  namespaceResourceWhitelist:
+    {{ range .Values.bootstrapProject.namespaceResourceWhitelist }}
+    - group: {{ .group | quote }}
+      kind: {{ .kind | quote }}
+    {{ end }}
   {{- if .Values.bootstrapProject.warnOrphanedResources }}
   orphanedResources:
     warn: true

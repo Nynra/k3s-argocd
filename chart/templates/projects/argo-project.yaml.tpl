@@ -24,9 +24,18 @@ spec:
   destinations:
     - namespace: {{ .Release.Namespace | quote }}
       server: {{ .Values.destination.server | quote }}
+  destinationNamespaces:
+    - {{ .Release.Namespace | quote }}
   clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
+    {{- range .Values.argocdProject.clusterResourceWhitelist }}
+    - group: {{ .group | quote }}
+      kind: {{ .kind | quote }}
+    {{- end }}
+  namespaceResourceWhitelist:
+    {{- range .Values.argocdProject.namespaceResourceWhitelist }}
+    - group: {{ .group | quote }}
+      kind: {{ .kind | quote }}
+    {{- end }}
   {{- if .Values.bootstrapProject.warnOrphanedResources }}
   orphanedResources:
     warn: true
