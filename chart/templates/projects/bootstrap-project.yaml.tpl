@@ -22,7 +22,7 @@ spec:
   destinations:
     {{- range .Values.bootstrapProject.namespaces }}
     - namespace: {{ . | quote }}
-      server: {{ .Values.destination.server | quote }}
+      server: {{ $.Values.destination.server | quote }}
     {{- end }}
   clusterResourceWhitelist:
     {{- range .Values.bootstrapProject.clusterResourceWhitelist }}
