@@ -24,8 +24,6 @@ spec:
   destinations:
     - namespace: {{ .Release.Namespace | quote }}
       server: {{ .Values.destination.server | quote }}
-    - namespace: '*'
-      server: '*'
   clusterResourceWhitelist:
     {{- range .Values.argocdProject.clusterResourceWhitelist }}
     - group: {{ .group | quote }}
